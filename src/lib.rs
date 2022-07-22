@@ -9,7 +9,11 @@ pub use bitcoind_log_parser::LogLine;
 
 type Callback = Box<dyn Fn(LogLine) + 'static>;
 
+pub struct Config {
+    log_path: String,
+}
 pub struct BitcoindWatcher {
+    config: Config,
     transaction_added_to_mempool_callback: Option<Callback>,
     new_proof_of_work_valid_block: Option<Callback>,
     new_outbound_peer_connected: Option<Callback>,
@@ -22,8 +26,8 @@ impl BitcoindWatcher {
         let new_proof_of_work_valid_block_ref = self.new_proof_of_work_valid_block.as_ref();
         let new_outbound_peer_connected_ref = self.new_outbound_peer_connected.as_ref();
 
-        const FILE_TO_WATCH: &str = "/Users/joe/Library/Application Support/Bitcoin/debug.log";
-        let mut log_watcher = LogWatcher::register(FILE_TO_WATCH.to_string()).unwrap();
+        let file_to_watch = &self.config.log_path;
+        let mut log_watcher = LogWatcher::register(file_to_watch.to_string()).unwrap();
         log_watcher.watch(&mut move |line: String| {
             let log_line: LogLine = bitcoind_log_parser::parse(&line).unwrap();
             match &log_line.message {
@@ -56,8 +60,12 @@ impl BitcoindWatcher {
             LogWatcherAction::None
         });
     }
-    pub fn new() -> Self {
+    pub fn new(log_path: &str) -> Self {
+        let config = Config {
+            log_path: log_path.to_string(),
+        };
         BitcoindWatcher {
+            config,
             transaction_added_to_mempool_callback: None,
             new_proof_of_work_valid_block: None,
             new_outbound_peer_connected: None,
