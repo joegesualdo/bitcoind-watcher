@@ -1,6 +1,6 @@
 [package]
 name = "bitcoind-watcher"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Be notified when important things happen on the Bitcoin blockchain"
 license = "MIT"
@@ -9,4 +9,4 @@ license = "MIT"
 
 [dependencies]
 logwatcher = "0.1"
-bitcoind-log-parser = "0.1.2"
+bitcoind-log-parser = "0.1.3"

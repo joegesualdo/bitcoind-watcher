@@ -7,7 +7,7 @@
 > Add package to Cargo.toml file
 ```rust
 [dependencies]
-bitcoind-watcher= "0.1.1"
+bitcoind-watcher= "0.1.2"
 ```
 
 ## Usage:
